@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slip Test Paper - Linear Algebra (Set A & Set B)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- MathJax Configuration and Engine -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Times+New+Roman&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .exam-paper {
+            font-family: 'Times New Roman', Times, serif;
+            background: #ffffff;
+        }
+
+        .academic-heading {
+            font-family: 'Cinzel', serif;
+        }
+
+        [contenteditable="true"] {
+            outline: 2px dashed #6366f1;
+            padding: 2px 4px;
+            border-radius: 4px;
+            background-color: #f5f3ff;
+        }
+
+        @media print {
+            body {
+                background-color: #ffffff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .exam-paper {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            .solution-box.hidden-print {
+                display: none !important;
+            }
+
+            .print-grid-2 {
+                display: grid !important;
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: 1.5rem !important;
+            }
+
+            .page-break {
+                page-break-before: always;
+            }
+        }
+
+        .mjx-chtml {
+            font-size: 100% !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen py-6 px-3 sm:px-6 lg:px-8">
+
+    <!-- Top Toolbar (Hidden on Print) -->
+    <div class="max-w-7xl mx-auto mb-6 no-print">
+        <div class="bg-white rounded-2xl shadow-md p-4 border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+            
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 text-white p-2.5 rounded-xl shadow-sm">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-base font-bold text-slate-800">Slip Test Question Paper Generator</h1>
+                    <p class="text-xs text-slate-500">Engineering Mathematics &bull; Set A & Set B (Side-by-Side)</p>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                <button id="btnToggleLayout" onclick="toggleLayout()" class="inline-flex items-center space-x-2 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold rounded-lg transition-colors border border-slate-300">
+                    <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2m0 10V7m6 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/>
+                    </svg>
+                    <span id="layoutBtnText">View: 2-Column Side-by-Side</span>
+                </button>
+
+                <button id="btnToggleAnswers" onclick="toggleAnswerKey()" class="inline-flex items-center space-x-2 px-3.5 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs sm:text-sm font-semibold rounded-lg shadow-sm transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    <span id="answerToggleText">Show Answer Key</span>
+                </button>
+
+                <button id="btnEditHeader" onclick="toggleEditMode()" class="inline-flex items-center space-x-2 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-semibold rounded-lg shadow-sm transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 012.828 0L20.586 7a2 2 0 010 2.828l-8.586 8.586z"/>
+                    </svg>
+                    <span id="editBtnText">Edit Details</span>
+                </button>
+
+                <button onclick="window.print()" class="inline-flex items-center space-x-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold rounded-lg shadow transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+                    </svg>
+                    <span>Print Paper</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Exam Container -->
+    <div class="max-w-7xl mx-auto exam-paper border-2 border-slate-900 p-6 sm:p-10 text-slate-900 rounded-sm shadow-xl">
+        
+        <!-- Institution Header -->
+        <header class="text-center border-b-2 border-slate-900 pb-5 mb-6">
+            <h2 id="editableDept" class="academic-heading text-lg sm:text-xl font-bold tracking-wider uppercase text-slate-800">DEPARTMENT OF MATHEMATICS</h2>
+            <h1 id="editableTitle" class="academic-heading text-2xl sm:text-3xl font-black tracking-wide my-1 text-slate-900">ENGINEERING MATHEMATICS - I</h1>
+            <h3 id="editableSub" class="text-base sm:text-lg font-bold tracking-wide uppercase text-slate-700">CONTINUOUS ASSESSMENT / SLIP TEST</h3>
+            
+            <div class="mt-4 pt-3 border-t border-slate-300 grid grid-cols-2 md:grid-cols-4 gap-3 text-xs sm:text-sm font-semibold text-slate-800">
+                <div class="text-left"><span class="font-normal text-slate-600">Course Code & Title:</span> <span id="editableCourse">MA3151 - Linear Algebra</span></div>
+                <div class="text-left"><span class="font-normal text-slate-600">Max Marks:</span> <span id="editableMarks">25 Marks</span></div>
+                <div class="text-left"><span class="font-normal text-slate-600">Duration:</span> <span id="editableTime">45 Minutes</span></div>
+                <div class="text-left"><span class="font-normal text-slate-600">Format:</span> <span class="font-bold underline text-indigo-900">SET A & SET B (2-Column)</span></div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-dashed border-slate-400 grid grid-cols-1 md:grid-cols-3 gap-2 text-xs sm:text-sm font-semibold">
+                <div class="text-left">Student Name: __________________________</div>
+                <div class="text-center">Register No: ____________________</div>
+                <div class="text-right">Date: ____________________</div>
+            </div>
+        </header>
+
+        <!-- Syllabus Ribbon -->
+        <div class="mb-6 p-2.5 bg-slate-50 border border-slate-300 text-xs text-slate-700 rounded flex flex-wrap justify-between items-center gap-2">
+            <span class="font-bold uppercase tracking-wider text-slate-900">Syllabus Portion:</span>
+            <span class="font-medium">1. Cayley-Hamilton Theorem &bull; 2. Reduction of Quadratic Form to Canonical Form by Orthogonal Transformation &bull; 3. Nature of Quadratic Form</span>
+        </div>
+
+        <!-- TWO COLUMN QUESTION PAPERS CONTAINER -->
+        <div id="paperGrid" class="grid grid-cols-1 lg:grid-cols-2 gap-8 print-grid-2">
+            
+            <!-- ========================================================================= -->
+            <!--                            LEFT COLUMN: SET A                             -->
+            <!-- ========================================================================= -->
+            <div class="border-2 border-indigo-900/40 rounded-sm p-4 sm:p-5 bg-white relative shadow-sm">
+                
+                <div class="bg-indigo-900 text-white text-center py-1.5 px-3 rounded-t-sm font-bold tracking-widest text-sm uppercase mb-5 flex justify-between items-center">
+                    <span>SET A</span>
+                    <span class="text-xs font-normal opacity-90">Total Marks: 25</span>
+                </div>
+
+                <!-- PART A - SET A -->
+                <section class="mb-6">
+                    <div class="flex justify-between items-center border-b-2 border-slate-800 pb-1 mb-3">
+                        <h4 class="font-bold text-sm sm:text-base uppercase tracking-wide">PART A &mdash; (5 &times; 2 = 10 Marks)</h4>
+                        <span class="text-[11px] font-semibold italic text-slate-600">Answer ALL Questions</span>
+                    </div>
+
+                    <ol class="list-decimal list-outside pl-4 space-y-4 text-xs sm:text-sm leading-relaxed">
+                        <!-- Q1 -->
+                        <li class="pl-1">
+                            <div class="flex justify-between items-start">
+                                <span>State the <strong>Cayley-Hamilton Theorem</strong> and list two of its primary engineering applications.</span>
+                                <span class="font-bold text-xs ml-2 whitespace-nowrap">[2]</span>
+                            </div>
+                            <div class="solution-box hidden hidden-print mt-2 p-3 bg-amber-50 border-l-4 border-amber-500 text-xs text-slate-800 rounded-r">
+                                <p class="font-bold text-amber-900 mb-1">Solution & Scheme:</p>
+                                <p class="mb-1"><strong>Statement:</strong> Every square matrix satisfies its own characteristic equation. If $|A - \lambda I| = 0$ is $\lambda^n + c_1\lambda^{n-1} + \dots + c_n = 0$, then $A^n + c_1 A^{n-1} + \dots + c_n I = 0$. <span class="text-amber-800 font-semibold">[1 Mark]</span></p>
+                                <p><strong>Applications:</strong> (1) Calculation of matrix inverse ($A^{-1}$). (2) Finding higher powers of matrices ($A^n$). <span class="text-amber-800 font-semibold">[1 Mark]</span></p>
+                            </div>
+                        </li>
+
+                        <!-- Q2 -->
+                        <li class="pl-1">
+                            <div class="flex justify-between items-start">
+                                <span>Using Cayley-Hamilton theorem, find $A^{-1}$ for $A = \begin{pmatrix} 1 & 2 \\ 2 & -1 \end{pmatrix}$.</span>
+                                <span class="font-bold text-xs ml-2 whitespace-nowrap">[2]</span>
+                            </div>
+                            <div class="solution-box hidden hidden-print mt-2 p-3 bg-amber-50 border-l-4 border-amber-500 text-xs text-slate-800 rounded-r">
+                                <p class="font-bold text-amber-900 mb-1">Solution & Scheme:</p>
+                                <p>Char. Eq: $|A - \lambda I| = \lambda^2 - 5 = 0 \implies A^2 - 5I = 0$. <span class="text-amber-800 font-semibold">[1 Mark]</span></p>
+                                <p>Multiply by $A^{-1} \implies 5A^{-1} = A \implies A^{-1} = \frac{1}{5} \begin{pmatrix} 1 & 2 \\ 2 & -1 \end{pmatrix}$. <span class="text-amber-800 font-semibold">[1 Mark]</span></p>
+                            </div>
+                        </li>
+
+                        <!-- Q3 -->
+                        <li class="pl-1">
+                            <div class="flex justify-between items-start">
+                                <span>Write the symmetric matrix associated with $Q = 2x_1^2 + 3x_2^2 + 2x_3^2 + 2x_1x_2 - 4x_2x_3$.</span>
+                                <span class="font-bold text-xs ml-2 whitespace-nowrap">[2]</span>
+                            </div>
+                            <div class="solution-box hidden hidden-print mt-2 p-3 bg-amber-50 border-l-4 border-amber-500 text-xs text-slate-800 rounded-r">
+                                <p class="font-bold text-amber-900 mb-1">Solution & Scheme:</p>
+                                <p>Diagonal entries: $(2, 3, 2)$. Off-diagonal: $a_{12}=a_{21}=1$, $a_{23}=a_{32}=-2$, $a_{13}=a_{31}=0$.</p>
+                                <p>$$A = \begin{pmatrix} 2 & 1 & 0 \\ 1 & 3 & -2 \\ 0 & -2 & 2 \end{pmatrix} \quad \text{[2 Marks]}$$</p>
+                            </div>
+                        </li>
+
+                        <!-- Q4 -->
+                        <li class="pl-1">
+                            <div class="flex justify-between items-start">
+                                <span>Define <strong>Rank</strong>, <strong>Index</strong>, and <strong>Signature</strong> of a quadratic form.</span>
+                                <span class="font-bold text-xs ml-2 whitespace-nowrap">[2]</span>
+                            </div>
+                            <div class="solution-box hidden hidden-print mt-2 p-3 bg-amber-50 border-l-4 border-amber-500 text-xs text-slate-800 rounded-r">
+                                <p class="font-bold text-amber-900 mb-1">Solution & Scheme:</p>
+                                <ul class="list-disc pl-4 space-y-1">
+                                    <li><strong>Rank ($r$):</strong> Number of non-zero terms in canonical form.</li>
+                                    <li><strong>Index ($s$):</strong> Number of positive terms in canonical form.</li>
+                                    <li><strong>Signature ($2s - r$):</strong> Difference between positive and negative terms. <span class="text-amber-800 font-semibold">[2 Marks]</span></li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <!-- Q5 -->
+                        <li class="pl-1">
+                            <div class="flex justify-between items-start">
+                                <span>Classify the nature of $Q = x_1^2 + 2x_2^2 + 3x_3^2$ and state its rank and index.</span>
+                                <span class="font-bold text-xs ml-2 whitespace-nowrap">[2]</span>
+                            </div>
+                            <div class="solution-box hidden hidden-print mt-2 p-3 bg-amber-50 border-l-4 border-amber-500 text-xs text-slate-800 rounded-r">
+                                <p class="font-bold text-amber-900 mb-1">Solution & Scheme:</p>
+                                <p>All terms positive $(1, 2, 3 > 0)$. Rank $r = 3$, Index $s = 3$. <span class="text-amber-800 font-semibold">[1 Mark]</span></p>
+                                <p>Nature: <strong>Positive Definite</strong>. <span class="text-amber-800 font-semibold">[1 Mark]</span></p>
+                            </div>
+                        </li>
+                    </ol>
+                </section>
+
+                <!-- PART B - SET A (15 MARKS ORTHOGONAL REDUCTION) -->
+                <section>
+                    <div class="flex justify-between items-center border-b-2 border-slate-800 pb-1 mb-3">
+                        <h4 class="font-bold text-sm sm:text-base uppercase tracking-wide">PART B &mdash; (1 &times; 15 = 15 Marks)</h4>
+                        <span class="text-[11px] font-semibold italic text-slate-600">Answer ALL Questions</span>
+                    </div>
+
+                    <div class="space-y-4 text-xs sm:text-sm leading-relaxed">
+                        <div>
+                            <div class="flex justify-between items-start font-semibold">
+                                <span>6. Reduce the quadratic form $Q = 6x_1^2 + 3x_2^2 + 3x_3^2 - 4x_1x_2 - 4x_1x_3 + 2x_2x_3$ to canonical form by orthogonal transformation. Find:
+                                <ol class="list-[lower-roman] pl-5 font-normal mt-1 space-y-0.5">
+                                    <li>The matrix representation $A$ and its characteristic equation.</li>
+                                    <li>The eigenvalues and pairwise orthogonal eigenvectors.</li>
+                                    <li>The normalized orthogonal transformation matrix $N$.</li>
+                                    <li>The canonical form, rank, index, signature, and nature of the quadratic form.</li>
+                                </ol>
+                                </span>
+                                <span class="font-bold text-xs ml-2 whitespace-nowrap">[15]</span>
+                            </div>
+
+                            <!-- Detailed 15 Mark Solution Box -->
+                            <div class="solution-box hidden hidden-print mt-3 p-3 bg-amber-50 border-l-4 border-amber-500 text-xs text-slate-800 rounded-r space-y-2">
+                                <p class="font-bold text-amber-900 border-b border-amber-200 pb-1">Detailed Solution & Step-by-Step Marking Scheme (15 Marks):</p>
+                                
+                                <p><strong>Step 1: Matrix Representation & Characteristic Equation</strong> <span class="text-amber-800 font-semibold">[3 Marks]</span></p>
+                                <p>$$A = \begin{pmatrix} 6 & -2 & -2 \\ -2 & 3 & 1 \\ -2 & 1 & 3 \end{pmatrix}$$</p>
+                                <p>$S_1 = 6 + 3 + 3 = 12$, $S_2 = 8 + 14 + 14 = 36$, $S_3 = |A| = 32$.</p>
+                                <p>Char. Eq: $\lambda^3 - 12\lambda^2 + 36\lambda - 32 = 0$.</p>
+
+                                <p><strong>Step 2: Eigenvalues & Pairwise Orthogonal Eigenvectors</strong> <span class="text-amber-800 font-semibold">[4 Marks]</span></p>
+                                <p>Solving $(\lambda - 8)(\lambda - 2)^2 = 0 \implies \lambda_1 = 8, \lambda_2 = 2, \lambda_3 = 2$.</p>
+                                <p>&bull; For $\lambda = 8$: $(A - 8I)X = 0 \implies X_1 = \begin{pmatrix} -2 & 1 & 1 \end{pmatrix}^T$.</p>
+                                <p>&bull; For $\lambda = 2$: $(A - 2I)X = 0 \implies 4x_1 - 2x_2 - 2x_3 = 0 \implies 2x_1 - x_2 - x_3 = 0$.</p>
+                                <p>Choose $X_2 = \begin{pmatrix} 0 & 1 & -1 \end{pmatrix}^T$. Let $X_3 = \begin{pmatrix} l & m & n \end{pmatrix}^T$.</p>
+                                <p>Using orthogonality $X_1 \cdot X_3 = 0$ and $X_2 \cdot X_3 = 0 \implies X_3 = \begin{pmatrix} 1 & 1 & 1 \end{pmatrix}^T$.</p>
+
+                                <p><strong>Step 3: Normalized Matrix $N$ & Orthogonal Transformation</strong> <span class="text-amber-800 font-semibold">[3 Marks]</span></p>
+                                <p>Lengths: $|X_1| = \sqrt{6}, |X_2| = \sqrt{2}, |X_3| = \sqrt{3}$.</p>
+                                <p>$$N = \begin{pmatrix} -2/\sqrt{6} & 0 & 1/\sqrt{3} \\ 1/\sqrt{6} & 1/\sqrt{2} & 1/\sqrt{3} \\ 1/\sqrt{6} & -1/\sqrt{2} & 1/\sqrt{3} \end{pmatrix}$$</p>
+                                <p>Transformation $X = NY$ transforms $Q$ to $Y^T D Y$ where $D = \text{diag}(8, 2, 2)$.</p>
+
+                                <p><strong>Step 4: Canonical Form & Properties</strong> <span class="text-amber-800 font-semibold">[5 Marks]</span></p>
+                                <p>Canonical Form: $8y_1^2 + 2y_2^2 + 2y_3^2$. <span class="text-amber-800 font-semibold">[2M]</span></p>
+                                <ul class="list-disc pl-4 space-y-0.5">
+                                    <li>Rank ($r$) = $3$ (All 3 terms present) <span class="text-amber-800 font-semibold">[1M]</span></li>
+                                    <li>Index ($s$) = $3$ (All 3 terms positive) <span class="text-amber-800 font-semibold">[1M]</span></li>
+                                    <li>Signature ($2s - r$) = $2(3) - 3 = 3$</li>
+                                    <li>Nature: <strong>Positive Definite</strong> (Since all eigenvalues $> 0$) <span class="text-amber-800 font-semibold">[1M]</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+
+            <!-- ========================================================================= -->
+            <!--                            RIGHT COLUMN: SET B                            -->
+            <!-- ========================================================================= -->
+            <div class="border-2 border-emerald-900/40 rounded-sm p-4 sm:p-5 bg-white relative shadow-sm">
+                
+                <div class="bg-emerald-900 text-white text-center py-1.5 px-3 rounded-t-sm font-bold tracking-widest text-sm uppercase mb-5 flex justify-between items-center">
+                    <span>SET B</span>
+                    <span class="text-xs font-normal opacity-90">Total Marks: 25</span>
+                </div>
+
+                <!-- PART A - SET B -->
+                <section class="mb-6">
+                    <div class="flex justify-between items-center border-b-2 border-slate-800 pb-1 mb-3">
+                        <h4 class="font-bold text-sm sm:text-base uppercase tracking-wide">PART A &mdash; (5 &times; 2 = 10 Marks)</h4>
+                        <span class="text-[11px] font-semibold italic text-slate-600">Answer ALL Questions</span>
+                    </div>
+
+                    <ol class="list-decimal list-outside pl-4 space-y-4 text-xs sm:text-sm leading-relaxed">
+                        <!-- Q1 -->
+                        <li class="pl-1">
+                            <div class="flex justify-between items-start">
+                                <span>If characteristic equation of $A$ is $\lambda^2 - 4\lambda + 3 = 0$, express $A^3$ in terms of $A$ and $I$ using C-H theorem.</span>
+                                <span class="font-bold text-xs ml-2 whitespace-nowrap">[2]</span>
+                            </div>
+                            <div class="solution-box hidden hidden-print mt-2 p-3 bg-amber-50 border-l-4 border-amber-500 text-xs text-slate-800 rounded-r">
+                                <p class="font-bold text-amber-900 mb-1">Solution & Scheme:</p>
+                                <p>$A^2 - 4A + 3I = 0 \implies A^2 = 4A - 3I$. <span class="text-amber-800 font-semibold">[1 Mark]</span></p>
+                                <p>$$A^3 = 4A^2 - 3A = 4(4A - 3I) - 3A = 13A - 12I \quad \text{[1 Mark]}$$</p>
+                            </div>
+                        </li>
+
+                        <!-- Q2 -->
+                        <li class="pl-1">
+                            <div class="flex justify-between items-start">
+                                <span>Find $A^{-1}$ using Cayley-Hamilton theorem for $A = \begin{pmatrix} 3 & 1 \\ -1 & 2 \end{pmatrix}$.</span>
+                                <span class="font-bold text-xs ml-2 whitespace-nowrap">[2]</span>
+                            </div>
+                            <div class="solution-box hidden hidden-print mt-2 p-3 bg-amber-50 border-l-4 border-amber-500 text-xs text-slate-800 rounded-r">
+                                <p class="font-bold text-amber-900 mb-1">Solution & Scheme:</p>
+                                <p>Char. Eq: $\lambda^2 - 5\lambda + 7 = 0 \implies A^2 - 5A + 7I = 0$. <span class="text-amber-800 font-semibold">[1 Mark]</span></p>
+                                <p>$$A^{-1} = \frac{1}{7}(5I - A) = \begin{pmatrix} 2/7 & -1/7 \\ 1/7 & 3/7 \end{pmatrix} \quad \text{[1 Mark]}$$</p>
+                            </div>
+                        </li>
+
+                        <!-- Q3 -->
+                        <li class="pl-1">
+                            <div class="flex justify-between items-start">
+                                <span>Express $Q(x,y,z) = x^2 + 5y^2 + z^2 + 2xy - 6yz + 4zx$ in symmetric matrix form.</span>
+                                <span class="font-bold text-xs ml-2 whitespace-nowrap">[2]</span>
+                            </div>
+                            <div class="solution-box hidden hidden-print mt-2 p-3 bg-amber-50 border-l-4 border-amber-500 text-xs text-slate-800 rounded-r">
+                                <p class="font-bold text-amber-900 mb-1">Solution & Scheme:</p>
+                                <p>Diagonal: $(1, 5, 1)$, Off-diagonal: $a_{12}=1, a_{23}=-3, a_{13}=2$.</p>
+                                <p>$$A = \begin{pmatrix} 1 & 1 & 2 \\ 1 & 5 & -3 \\ 2 & -3 & 1 \end{pmatrix} \quad \text{[2 Marks]}$$</p>
+                            </div>
+                        </li>
+
+                        <!-- Q4 -->
+                        <li class="pl-1">
+                            <div class="flex justify-between items-start">
+                                <span>State eigenvalue conditions for a quadratic form to be (i) Positive Semi-Definite, (ii) Indefinite.</span>
+                                <span class="font-bold text-xs ml-2 whitespace-nowrap">[2]</span>
+                            </div>
+                            <div class="solution-box hidden hidden-print mt-2 p-3 bg-amber-50 border-l-4 border-amber-500 text-xs text-slate-800 rounded-r">
+                                <p class="font-bold text-amber-900 mb-1">Solution & Scheme:</p>
+                                <p>(i) <strong>Positive Semi-Definite:</strong> All $\lambda_i \ge 0$ with at least one $\lambda_k = 0$. <span class="text-amber-800 font-semibold">[1 Mark]</span></p>
+                                <p>(ii) <strong>Indefinite:</strong> Eigenvalues contain both positive and negative values. <span class="text-amber-800 font-semibold">[1 Mark]</span></p>
+                            </div>
+                        </li>
+
+                        <!-- Q5 -->
+                        <li class="pl-1">
+                            <div class="flex justify-between items-start">
+                                <span>Convert $Q = -x_1^2 - 2x_2^2 - 5x_3^2$ to canonical form and state its nature, rank, and index.</span>
+                                <span class="font-bold text-xs ml-2 whitespace-nowrap">[2]</span>
+                            </div>
+                            <div class="solution-box hidden hidden-print mt-2 p-3 bg-amber-50 border-l-4 border-amber-500 text-xs text-slate-800 rounded-r">
+                                <p class="font-bold text-amber-900 mb-1">Solution & Scheme:</p>
+                                <p>Canonical Form: $-y_1^2 - 2y_2^2 - 5y_3^2$.</p>
+                                <p>Rank $r = 3$, Index $s = 0$. <span class="text-amber-800 font-semibold">[1 Mark]</span></p>
+                                <p>Nature: <strong>Negative Definite</strong>. <span class="text-amber-800 font-semibold">[1 Mark]</span></p>
+                            </div>
+                        </li>
+                    </ol>
+                </section>
+
+                <!-- PART B - SET B (15 MARKS ORTHOGONAL REDUCTION) -->
+                <section>
+                    <div class="flex justify-between items-center border-b-2 border-slate-800 pb-1 mb-3">
+                        <h4 class="font-bold text-sm sm:text-base uppercase tracking-wide">PART B &mdash; (1 &times; 15 = 15 Marks)</h4>
+                        <span class="text-[11px] font-semibold italic text-slate-600">Answer ALL Questions</span>
+                    </div>
+
+                    <div class="space-y-4 text-xs sm:text-sm leading-relaxed">
+                        <div>
+                            <div class="flex justify-between items-start font-semibold">
+                                <span>6. Reduce the quadratic form $Q = 2x_1^2 + 5x_2^2 + 3x_3^2 + 4x_1x_2$ to canonical form by orthogonal transformation. Find:
+                                <ol class="list-[lower-roman] pl-5 font-normal mt-1 space-y-0.5">
+                                    <li>The matrix representation $A$ and its characteristic equation.</li>
+                                    <li>The eigenvalues and pairwise orthogonal eigenvectors.</li>
+                                    <li>The normalized orthogonal transformation matrix $N$.</li>
+                                    <li>The canonical form, rank, index, signature, and nature of the quadratic form.</li>
+                                </ol>
+                                </span>
+                                <span class="font-bold text-xs ml-2 whitespace-nowrap">[15]</span>
+                            </div>
+
+                            <!-- Detailed 15 Mark Solution Box -->
+                            <div class="solution-box hidden hidden-print mt-3 p-3 bg-amber-50 border-l-4 border-amber-500 text-xs text-slate-800 rounded-r space-y-2">
+                                <p class="font-bold text-amber-900 border-b border-amber-200 pb-1">Detailed Solution & Step-by-Step Marking Scheme (15 Marks):</p>
+
+                                <p><strong>Step 1: Matrix Representation & Characteristic Equation</strong> <span class="text-amber-800 font-semibold">[3 Marks]</span></p>
+                                <p>$$A = \begin{pmatrix} 2 & 2 & 0 \\ 2 & 5 & 0 \\ 0 & 0 & 3 \end{pmatrix}$$</p>
+                                <p>$S_1 = 2 + 5 + 3 = 10$, $S_2 = (10-4) + 15 + 6 = 27$, $S_3 = |A| = 3(10 - 4) = 18$.</p>
+                                <p>Char. Eq: $\lambda^3 - 10\lambda^2 + 27\lambda - 18 = 0$.</p>
+
+                                <p><strong>Step 2: Eigenvalues & Pairwise Orthogonal Eigenvectors</strong> <span class="text-amber-800 font-semibold">[4 Marks]</span></p>
+                                <p>Factorizing: $(\lambda - 1)(\lambda - 3)(\lambda - 6) = 0 \implies \lambda_1 = 1, \lambda_2 = 3, \lambda_3 = 6$.</p>
+                                <p>&bull; For $\lambda = 1$: $(A - I)X = 0 \implies X_1 = \begin{pmatrix} -2 & 1 & 0 \end{pmatrix}^T$.</p>
+                                <p>&bull; For $\lambda = 3$: $(A - 3I)X = 0 \implies X_2 = \begin{pmatrix} 0 & 0 & 1 \end{pmatrix}^T$.</p>
+                                <p>&bull; For $\lambda = 6$: $(A - 6I)X = 0 \implies X_3 = \begin{pmatrix} 1 & 2 & 0 \end{pmatrix}^T$.</p>
+                                <p>(Note: $X_1 \cdot X_2 = 0, X_2 \cdot X_3 = 0, X_1 \cdot X_3 = 0$ verified).</p>
+
+                                <p><strong>Step 3: Normalized Matrix $N$ & Orthogonal Transformation</strong> <span class="text-amber-800 font-semibold">[3 Marks]</span></p>
+                                <p>Lengths: $|X_1| = \sqrt{5}, |X_2| = 1, |X_3| = \sqrt{5}$.</p>
+                                <p>$$N = \begin{pmatrix} -2/\sqrt{5} & 0 & 1/\sqrt{5} \\ 1/\sqrt{5} & 0 & 2/\sqrt{5} \\ 0 & 1 & 0 \end{pmatrix}$$</p>
+                                <p>Transformation $X = NY$ satisfies $N^T A N = D = \text{diag}(1, 3, 6)$.</p>
+
+                                <p><strong>Step 4: Canonical Form & Properties</strong> <span class="text-amber-800 font-semibold">[5 Marks]</span></p>
+                                <p>Canonical Form: $1y_1^2 + 3y_2^2 + 6y_3^2$. <span class="text-amber-800 font-semibold">[2M]</span></p>
+                                <ul class="list-disc pl-4 space-y-0.5">
+                                    <li>Rank ($r$) = $3$ <span class="text-amber-800 font-semibold">[1M]</span></li>
+                                    <li>Index ($s$) = $3$ <span class="text-amber-800 font-semibold">[1M]</span></li>
+                                    <li>Signature ($2s - r$) = $2(3) - 3 = 3$</li>
+                                    <li>Nature: <strong>Positive Definite</strong> (Since all eigenvalues $> 0$) <span class="text-amber-800 font-semibold">[1M]</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+        </div>
+
+        <!-- Paper Footer -->
+        <footer class="mt-8 pt-4 border-t-2 border-slate-900 text-xs text-slate-600 flex flex-wrap justify-between items-center gap-4">
+            <div>
+                <p class="font-bold text-slate-800">Candidate Instructions:</p>
+                <p>&bull; Part A: Short answer questions (2 Marks each). Part B: Comprehensive Orthogonal Reduction (15 Marks).</p>
+                <p>&bull; Non-programmable scientific calculators are permitted.</p>
+            </div>
+            <div class="text-right">
+                <p class="font-bold text-slate-900 text-sm">*** END OF QUESTION PAPER ***</p>
+                <p class="italic text-slate-500">Prepared by Faculty of Mathematics</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- JavaScript Functions -->
+    <script>
+        let showAnswers = false;
+        let isTwoColumn = true;
+        let isEditMode = false;
+
+        function toggleAnswerKey() {
+            showAnswers = !showAnswers;
+            const solutionBoxes = document.querySelectorAll('.solution-box');
+            const toggleText = document.getElementById('answerToggleText');
+
+            solutionBoxes.forEach(box => {
+                if (showAnswers) {
+                    box.classList.remove('hidden');
+                    box.classList.remove('hidden-print');
+                } else {
+                    box.classList.add('hidden');
+                    box.classList.add('hidden-print');
+                }
+            });
+
+            toggleText.textContent = showAnswers ? "Hide Answer Key" : "Show Answer Key";
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        function toggleLayout() {
+            isTwoColumn = !isTwoColumn;
+            const grid = document.getElementById('paperGrid');
+            const btnText = document.getElementById('layoutBtnText');
+
+            if (isTwoColumn) {
+                grid.className = "grid grid-cols-1 lg:grid-cols-2 gap-8 print-grid-2";
+                btnText.textContent = "View: 2-Column Side-by-Side";
+            } else {
+                grid.className = "grid grid-cols-1 gap-8";
+                btnText.textContent = "View: Single-Column Stacked";
+            }
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const editableElements = [
+                'editableDept', 'editableTitle', 'editableSub', 
+                'editableCourse', 'editableMarks', 'editableTime'
+            ];
+            const editBtnText = document.getElementById('editBtnText');
+
+            editableElements.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.contentEditable = isEditMode ? "true" : "false";
+                }
+            });
+
+            editBtnText.textContent = isEditMode ? "Save Details" : "Edit Details";
+        }
+    </script>
+</body>
+</html>
